@@ -139,24 +139,31 @@ $date1 = date("YMd");
     mkdir("C:/invoices/all_invoices");
   }
 
-if(isset($_POST['submit'])){
+  if (isset($_POST['submit'])) {
+    $invoice_number = $_POST['invoice_number'];
+    $date = $_POST['date'];
 
-  $invoice_number = $_POST['invoice_number'];
-  $date = $_POST['date'];
-   $medicine_name = $_POST['medicine_name'];
-   @$medicines = implode($medicine_name, ",");
-   $quantity = $_POST['qty'];
-   $qty = implode($quantity, ",");
-   $qty_type = $qty;
-   $filename = "i-".$invoice_number.".pdf";
-   $dir      = "";
+    // Ensure medicine_name is an array
+    $medicine_name = isset($_POST['medicine_name']) ? (array)$_POST['medicine_name'] : [];
+    $medicines = implode(",", $medicine_name);
 
-  $pdf = new myPDF();
- $pdf->AddPage('L','A4',0);
- $pdf->headerTable();
- $pdf->viewTable();
- $pdf->Output('C:/invoices/'.$date1.'/'.$filename,'F');
- $pdf->Output('C:/invoices/all_invoices/'.$filename,'F');
+    // Ensure quantity is an array
+    $quantity = isset($_POST['qty']) ? (array)$_POST['qty'] : [];
+    $qty = implode(",", $quantity);
+
+    $qty_type = $qty;
+    $filename = "i-" . $invoice_number . ".pdf";
+    $dir = "";
+
+    $pdf = new myPDF();
+    $pdf->AddPage('L', 'A4', 0);
+    $pdf->headerTable();
+    $pdf->viewTable();
+    $pdf->Output('C:/invoices/' . $date1 . '/' . $filename, 'F');
+    $pdf->Output('C:/invoices/all_invoices/' . $filename, 'F');
+
+
+
 
  $select_on_hold = "SELECT * From on_hold where invoice_number = '$invoice_number'";
 
